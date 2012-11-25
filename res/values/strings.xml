@@ -25,4 +25,13 @@ objective is to fill the grid so that each row, each column, and each of the 3x3
     <string name="hints_title">Hints</string>
     <string name="hints_summary">Show hints during play</string>
 
+    <string name="new_game_title">Difficulty</string>
+    <string name="easy_label">Easy</string>
+    <string name="medium_label">Medium</string>
+    <string name="hard_label">Hard</string>
+    
+    <string name="game_title">Game</string>
+    <string name="no_moves_label">No moves</string>
+    <string name="keypad_title">Keypad</string>
+    
 </resources>
