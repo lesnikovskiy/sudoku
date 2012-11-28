@@ -54,6 +54,18 @@ public class Sudoku extends Activity implements OnClickListener {
     	return false;
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	Music.play(this, R.raw.main);
+    }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	Music.stop(this);
+    }
+    
     public void onClick(View v) {
     	switch(v.getId()) {
 	    	case R.id.about_button:
@@ -63,6 +75,10 @@ public class Sudoku extends Activity implements OnClickListener {
 	    		
 	    	case R.id.new_game_button:
 	    		openNewGameDialog();
+	    		break;
+	    		
+	    	case R.id.continue_button:
+	    		startGame(Game.DIFFICULTY_CONTINUE);
 	    		break;
 	    		
 	    	case R.id.exit_button:

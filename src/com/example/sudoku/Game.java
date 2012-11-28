@@ -10,10 +10,13 @@ import android.widget.Toast;
 public class Game extends Activity {
 	private static final String TAG = "Sudoku";
 	
+	private static final String PREF_PUZZLE = "puzzle";
+	protected static final int DIFFICULTY_CONTINUE = -1;
+	
 	public static final String KEY_DIFFICULTY = "com.example.sudoku.difficulty";
 	public static final int DIFFICULTY_EASY = 0;
 	public static final int DIFFICULTY_MEDIUM = 1;
-	public static final int DIFFICULTY_HADR = 2;
+	public static final int DIFFICULTY_HARD = 2;
 	
 	private int puzzle[] = new int[9 * 9];
 	
@@ -24,6 +27,8 @@ public class Game extends Activity {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "onCreate");
 		
+		// If the activity is restarted, do a continue next time
+		getIntent().putExtra(KEY_DIFFICULTY, DIFFICULTY_CONTINUE);
 		int diff = getIntent().getIntExtra(KEY_DIFFICULTY, DIFFICULTY_EASY);
 		puzzle = getPuzzle(diff);
 		calculateUsedTiles();
@@ -31,6 +36,23 @@ public class Game extends Activity {
 		puzzleView = new PuzzleView(this);
 		setContentView(puzzleView);
 		puzzleView.requestFocus();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Music.play(this, R.raw.game);
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(TAG, "onPause");
+		Music.stop(this);
+		
+		// Save the current puzzle
+		getPreferences(MODE_PRIVATE).edit()
+			.putString(PREF_PUZZLE, toPuzzleString(puzzle)).commit();
 	}
 	
 	protected void showKeypadOnError(int x, int y) {
@@ -129,7 +151,9 @@ public class Game extends Activity {
 	private int[] getPuzzle(int diff) {
 		String puzz;
 		switch(diff) {
-			case DIFFICULTY_HADR:
+			case DIFFICULTY_CONTINUE:
+				puzz = getPreferences(MODE_PRIVATE).getString(PREF_PUZZLE, mediumPuzzle);
+			case DIFFICULTY_HARD:
 				puzz = hardPuzzle;
 				break;
 			case DIFFICULTY_MEDIUM:
